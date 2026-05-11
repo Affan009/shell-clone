@@ -1,0 +1,4 @@
+ash
+*.o
+*.out
+*.exe
