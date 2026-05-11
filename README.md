@@ -7,6 +7,20 @@ ash is a UNIX-like shell clone in C that reads, parsers, and executes commands s
 * Builtin commands
 * External program execution via PATH lookup
 
+## Requirements
+
+* Linux or macOS
+* GCC/Clang or any C compiler
+
+## Quick Start
+
+```bash
+git clone https://github.com/Affan009/shell-clone.git
+cd shell-clone
+make
+./ash
+```
+
 ## Future Improvements
 
 * Quoting
