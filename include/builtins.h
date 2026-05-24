@@ -6,7 +6,7 @@ typedef int (*builtin_func)(char**);
 typedef struct {
     const char* str;
     builtin_func func;
-} builtin;
+} Builtin;
 
 int num_builtins();
 
@@ -18,6 +18,6 @@ int sh_cd(char** args);
 int sh_help(char** args);
 bool is_builtin(const char* command);
 
-extern const builtin builtins[];
+extern const Builtin builtins[];
 
 #endif

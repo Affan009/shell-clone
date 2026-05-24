@@ -8,7 +8,17 @@ Goals:
 2. Implement commonly used builtin commands.
 3. External command execution via PATH lookup.
 
-## REPL Flow
+## REPL
+
+It is the main interactive loop of the shell.
+
+### Design
+- Prints prompt to the terminal.
+- Delegates to the Parser and Executor.
+- Receives status which is `1` if the loop is to be continued and `0` for terminating the session.
+- Handles empty input (`\n`) and EOF (`Ctrl + D`).
+  
+### Flow
 
 ``` mermaid
 graph LR
@@ -17,7 +27,7 @@ graph LR
 	C -->|Loop| A
 ```
 
-### Loop Design
+### Implementation
 
 ``` C
 do {
@@ -34,7 +44,22 @@ do {
 
 Parser handles taking input from the user, and splitting the input line into arguments.
 
-### Functions
+### Design
+- Reads line from the prompt, handling '\n' or EOF.
+- The line is tokenized by splitting on delimiters.
+- The first token is the command name, and the rest are arguments.
+
+### Implementation Details
+
+#### Constants
+
+| Constant | Value | Description |
+|----------|------------|--------------|
+|`RL_BUFF_SIZE`|`1024`|Initial buffer size for reading the line|
+|`TOK_BUFF_SIZE`|`64`|Initial buffer size for the tokens|
+|`TOK_DELIM`|`" \t\r\n\a"`|String containing delimiters|
+
+#### Functions
 
 | Function | Parameters | Return Value | Description |
 |----------|------------|--------------|-------------|
@@ -46,7 +71,14 @@ Parser handles taking input from the user, and splitting the input line into arg
 
 Executor handles evaluation and execution of the commands input by the user at the prompt.
 
-### Functions
+### Design
+- Checks if the command is a builtin, and executes it in the same process.
+- For an external program, forks a child process and executes it there.
+- Returns status `1` for continuing, and `0` for terminate the shell session.
+
+### Implementation Details
+
+#### Functions
 
 | Function | Parameters | Return Value | Description |
 |----------|------------|--------------|-------------|
@@ -55,9 +87,35 @@ Executor handles evaluation and execution of the commands input by the user at t
 
 ## Builtins
 
-Builtins are programs/commands built into the shell. They are executed in the same process as the shell (no forking), as they change the shell's operation itself. Each builtin takes `args` as input and returns an `int` status. The builtins implemented here are as follows:
+Builtins are programs/commands built into the shell. They are executed in the same process as the shell (no forking), as they change the shell's operation itself.
 
-### Functions
+### Design
+- Executed in the same process.
+- Each builtin takes `char** args` as input and returns an `int` status.
+
+### Implementation Details
+
+#### Data Structures
+
+- Function pointers to builtin function implementations, aliased to `builtin_func`:
+	``` C
+	typedef int (*builtin_func)(char**);
+	```
+
+- A `struct` binding the name of the builtin to its function pointer, typedef to `Builtin`:
+	``` C
+	typedef struct {
+		const char* str;
+		builtin_func func;
+	} Builtin;
+	```
+
+- A `const` list of builtin structs, declared as `extern` for visibility:
+	``` C
+	extern const Builtin builtins[];
+	```
+
+#### Functions
 
 | Function | Description |
 |----------|-------------|
