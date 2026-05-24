@@ -8,7 +8,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "lexer.h"
+#include "parser.h"
 #include "builtins.h"
 #include "executor.h"
 

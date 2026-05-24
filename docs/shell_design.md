@@ -30,9 +30,9 @@ do {
 } while (status)
 ```
 
-## Lexer
+## Parser
 
-Lexer handles taking input from the user, and splitting the input line into arguments.
+Parser handles taking input from the user, and splitting the input line into arguments.
 
 ### Functions
 

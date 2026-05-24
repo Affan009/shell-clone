@@ -1,21 +1,36 @@
 #include "shell.h"
-#include "lexer.h"
+#include "parser.h"
 
 char* read_line() {
-    char* buffer = NULL;
-    size_t buffsize = 0;
-
-    if (getline(&buffer, &buffsize, stdin) == -1) {
-        if (feof(stdin)) {
-            exit(EXIT_SUCCESS);
-        }
-        else {
-            perror("ash");
-            exit(EXIT_FAILURE);
-        }
+    int buffsize = RL_BUFF_SIZE, position = 0;
+    char* buffer = malloc(buffsize * sizeof(char));
+    if (buffer == NULL) {
+        fprintf(stderr, "ash: Allocation error\n");
+        exit(EXIT_FAILURE);
     }
 
-    return buffer;
+    char c;
+    while (true) {
+        c = getchar();
+
+        if (c == EOF || c == '\n') {
+            buffer[position] = '\0';
+            return buffer;
+        } else {
+            buffer[position++] = c;
+        }
+
+        if (position >= buffsize) {
+            buffsize += RL_BUFF_SIZE;
+            char* temp = realloc(buffer, buffsize * sizeof(char));
+            if (temp == NULL) {
+                free(buffer);
+                fprintf(stderr, "ash: Allocation error\n");
+                exit(EXIT_FAILURE);
+            }
+            buffer = temp;
+        }
+    }
 }
 
 char** split_line(char* line) {
