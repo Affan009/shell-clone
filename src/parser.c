@@ -44,7 +44,7 @@ char** split_line(char* line) {
 
     char* read_ptr = line;
     char* write_ptr = read_ptr;
-    bool in_arg = false;
+    bool in_arg = false; // Track if we're currently building an argument
     ParserState state = STATE_PARSER_NORMAL;
     while (*read_ptr != '\0') {
         if (state == STATE_PARSER_NORMAL) {

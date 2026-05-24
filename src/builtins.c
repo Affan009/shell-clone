@@ -10,6 +10,7 @@ const Builtin builtins[] = {
     {"help", sh_help}
 };
 
+// Helper function to get the number of built-in commands
 int num_builtins() {
     return sizeof(builtins) / sizeof(Builtin);
 }
