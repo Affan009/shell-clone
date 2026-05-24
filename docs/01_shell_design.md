@@ -3,10 +3,10 @@
 ## Introduction
 A UNIX-like shell accepts user commands at the prompt, parses and executes them.
 
-Goals:
-1. REPL (Read-Eval-Print Loop) Implementation.
-2. Implement commonly used builtin commands.
-3. External command execution via PATH lookup.
+### Goals
+- REPL (Read-Eval-Print Loop) Implementation.
+- Implement commonly used builtin commands.
+- External command execution via PATH lookup.
 
 ## REPL
 
@@ -64,7 +64,7 @@ Parser handles taking input from the user, and splitting the input line into arg
 | Function | Parameters | Return Value | Description |
 |----------|------------|--------------|-------------|
 |`read_line()`|None (Void)|`char*` — a string | Reads line entered by the user|
-|`split_line(line)`|`char*` — a string line|`char**` — an array of string arguments|Splits the line string with respect to delimiters into a null terminated array of strings. The first argument is the command|
+|`split_line(line)`|`char*` — a string line|`char**` — an array of string arguments|Splits the line string with respect to delimiters into a null terminated array of strings.|
 
 
 ## Executor
