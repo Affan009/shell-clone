@@ -1,7 +1,7 @@
 #include "shell.h"
 #include "builtins.h"
 
-const builtin builtins[] = {
+const Builtin builtins[] = {
     {"exit", sh_exit},
     {"echo", sh_echo},
     {"type", sh_type},
@@ -11,7 +11,7 @@ const builtin builtins[] = {
 };
 
 int num_builtins() {
-    return sizeof(builtins) / sizeof(builtin);
+    return sizeof(builtins) / sizeof(Builtin);
 }
 
 int sh_exit(char** args) {
