@@ -9,7 +9,6 @@ A UNIX-like shell accepts user commands at the prompt, parses and executes them.
 - External command execution via PATH lookup.
 
 ## REPL
-
 It is the main interactive loop of the shell.
 
 ### Design
@@ -19,7 +18,6 @@ It is the main interactive loop of the shell.
 - Handles empty input (`\n`) and EOF (`Ctrl + D`).
   
 ### Flow
-
 ``` mermaid
 graph LR
 	A[Read] --> B[Tokenize]
@@ -28,7 +26,6 @@ graph LR
 ```
 
 ### Implementation
-
 ``` C
 do {
 	print("$")
@@ -41,7 +38,6 @@ do {
 ```
 
 ## Parser
-
 Parser handles taking input from the user, and splitting the input line into arguments.
 
 ### Design
@@ -52,7 +48,6 @@ Parser handles taking input from the user, and splitting the input line into arg
 ### Implementation Details
 
 #### Constants
-
 | Constant | Value | Description |
 |----------|------------|--------------|
 |`RL_BUFF_SIZE`|`1024`|Initial buffer size for reading the line|
@@ -60,15 +55,13 @@ Parser handles taking input from the user, and splitting the input line into arg
 |`TOK_DELIM`|`" \t\r\n\a"`|String containing delimiters|
 
 #### Functions
-
 | Function | Parameters | Return Value | Description |
 |----------|------------|--------------|-------------|
 |`read_line()`|None (Void)|`char*` — a string | Reads line entered by the user|
-|`split_line(line)`|`char*` — a string line|`char**` — an array of string arguments|Splits the line string with respect to delimiters into a null terminated array of strings.|
+|`split_line(line)`|`char*` — a string line|`char**` — an array of string arguments|Splits the line string with respect to delimiters into a null terminated array of strings|
 
 
 ## Executor
-
 Executor handles evaluation and execution of the commands input by the user at the prompt.
 
 ### Design
@@ -79,14 +72,12 @@ Executor handles evaluation and execution of the commands input by the user at t
 ### Implementation Details
 
 #### Functions
-
 | Function | Parameters | Return Value | Description |
 |----------|------------|--------------|-------------|
 |`sh_execute(args)`|`char**` — an array of string arguments|`int` — an integer status|Executes the command in args. It distinguishes between builtin and external programs|
 |`sh_launch(args)`|`char**` — an array of string arguments|`int` — an integer status|Executes external programs in the PATH as separate child processes|
 
 ## Builtins
-
 Builtins are programs/commands built into the shell. They are executed in the same process as the shell (no forking), as they change the shell's operation itself.
 
 ### Design
@@ -96,7 +87,6 @@ Builtins are programs/commands built into the shell. They are executed in the sa
 ### Implementation Details
 
 #### Data Structures
-
 - Function pointers to builtin function implementations, aliased to `builtin_func`:
 	``` C
 	typedef int (*builtin_func)(char**);
@@ -116,7 +106,6 @@ Builtins are programs/commands built into the shell. They are executed in the sa
 	```
 
 #### Functions
-
 | Function | Description |
 |----------|-------------|
 |`sh_help(args)`|Prints a list of all the available builtins in the shell|
