@@ -2,12 +2,24 @@
 #include "redirection.h"
 
 int handle_redirection(char** args, int* redirected_fd) {
-    int i, open_flags;
+    int i, open_flags = 0;
 
     for (i = 0; args[i] != NULL; i++) {
         if (strcmp(args[i], ">") == 0 || strcmp(args[i], "1>") == 0) {
             *redirected_fd = STDOUT_FILENO;
             open_flags = OVERWRITE_FLAGS;
+            break;
+        } else if (strcmp(args[i], "2>") == 0) {
+            *redirected_fd = STDERR_FILENO;
+            open_flags = OVERWRITE_FLAGS;
+            break;
+        } else if (strcmp(args[i], ">>") == 0 || strcmp(args[i], "1>>") == 0) {
+            *redirected_fd = STDOUT_FILENO;
+            open_flags = APPEND_FLAGS;
+            break;
+        } else if (strcmp(args[i], "2>>") == 0) {
+            *redirected_fd = STDERR_FILENO;
+            open_flags = APPEND_FLAGS;
             break;
         }
     }
@@ -40,7 +52,7 @@ int handle_redirection(char** args, int* redirected_fd) {
             perror("ash");
             return -1;
         }
-        
+
         close(fd);
         return saved_fd;
     }
