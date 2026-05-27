@@ -9,6 +9,9 @@
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <dirent.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #include "parser.h"
 #include "builtins.h"
