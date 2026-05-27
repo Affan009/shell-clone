@@ -4,7 +4,7 @@
 typedef int (*builtin_func)(char**);
 
 typedef struct {
-    const char* str;
+    const char* name;
     builtin_func func;
 } Builtin;
 

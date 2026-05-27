@@ -94,14 +94,14 @@ int sh_help(char** args) {
     printf("Built-in commands:\n");
 
     for (int i = 0; i < num_builtins(); i++) {
-        printf("  %s\n", builtins[i].str);
+        printf("  %s\n", builtins[i].name);
     }
     return 1;
 }
 
 bool is_builtin(const char* command) {
     for (int i = 0; i < num_builtins(); i++) {
-        if (strcmp(command, builtins[i].str) == 0) {
+        if (strcmp(command, builtins[i].name) == 0) {
             return true;
         }
     }
