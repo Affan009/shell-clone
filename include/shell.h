@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <sys/param.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
