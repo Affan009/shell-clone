@@ -5,10 +5,10 @@ void sh_loop() {
     char** args;
     int status;
 
-    do {
-        printf("$ ");
+    init_completion();
 
-        line = read_line();
+    do {
+        line = readline("$ ");
         args = split_line(line);
         if (args[0] == NULL) { // Empty command
             free(line);

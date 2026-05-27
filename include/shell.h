@@ -17,6 +17,7 @@
 #include "builtins.h"
 #include "executor.h"
 #include "redirection.h"
+#include "completion.h"
 
 void sh_loop();
 

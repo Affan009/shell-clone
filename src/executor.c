@@ -33,7 +33,7 @@ int sh_execute(char** args) {
     }
 
     for (int i = 0; i < num_builtins(); i++) {
-        if (strcmp(args[0], builtins[i].str) == 0) {
+        if (strcmp(args[0], builtins[i].name) == 0) {
             return builtins[i].func(args);
         }
     }
