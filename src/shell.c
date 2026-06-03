@@ -6,20 +6,27 @@ void sh_loop() {
     int status;
 
     init_completion();
+    init_history();
 
     do {
         line = readline("$ ");
+        char* line_copy = strdup(line);
+
         args = split_line(line);
         if (args[0] == NULL) { // Empty command
             free(line);
+            free(line_copy);
             free(args);
             continue;
         }
+
+        add_hist(line_copy);
 
         int redirected_fd = -1;
         int saved_fd = handle_redirection(args, &redirected_fd);
         if (redirected_fd != -1 && saved_fd == -1) { // Redirection error
             free(line);
+            free(line_copy);
             free(args);
             continue;
         }
@@ -32,6 +39,7 @@ void sh_loop() {
         }
 
         free(line);
+        free(line_copy);
         free(args);
     } while (status);
 }

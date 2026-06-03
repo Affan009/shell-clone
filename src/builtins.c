@@ -7,7 +7,8 @@ const Builtin builtins[] = {
     {"type", sh_type},
     {"pwd", sh_pwd},
     {"cd", sh_cd},
-    {"help", sh_help}
+    {"help", sh_help},
+    {"history", sh_history}
 };
 
 // Helper function to get the number of built-in commands
@@ -95,6 +96,20 @@ int sh_help(char** args) {
 
     for (int i = 0; i < num_builtins(); i++) {
         printf("  %s\n", builtins[i].name);
+    }
+    return 1;
+}
+
+int sh_history(char** args) {
+    int start = 0;
+    if (args[1] != NULL) {
+        int cap = atoi(args[1]);
+        start = get_hist_count() - cap;
+        if (start < 0) start = 0;
+    }
+
+    for (int i = start; i < get_hist_count(); i++) {
+        printf("%d: %s\n", i + 1, get_hist_entry(i));
     }
     return 1;
 }
