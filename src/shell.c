@@ -42,4 +42,7 @@ void sh_loop() {
         free(line_copy);
         free(args);
     } while (status);
+
+    write_hist(HISTFILE);
+    free_history();
 }

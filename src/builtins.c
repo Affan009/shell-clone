@@ -17,6 +17,7 @@ int num_builtins() {
 }
 
 int sh_exit(char** args) {
+    (void)args; // Unused parameter
     return 0;
 }
 
@@ -60,6 +61,7 @@ int sh_type(char** args) {
 }
 
 int sh_pwd(char** args) {
+    (void)args; // Unused parameter
     char* path = getcwd(NULL, 0);
 
     if (path == NULL) {
@@ -91,6 +93,7 @@ int sh_cd(char** args) {
 }
 
 int sh_help(char** args) {
+    (void)args; // Unused parameter
     printf("ash: a C-shell (nice)\n");
     printf("Built-in commands:\n");
 
@@ -101,6 +104,21 @@ int sh_help(char** args) {
 }
 
 int sh_history(char** args) {
+    if (args[1] != NULL && strcmp(args[1], "-r") == 0) {
+        if (args[2]) read_hist(args[2]);
+        return 1;
+    }
+
+    if (args[1] != NULL && strcmp(args[1], "-w") == 0) {
+        if (args[2]) write_hist(args[2]);
+        return 1;
+    }
+
+    if (args[1] != NULL && strcmp(args[1], "-a") == 0) {
+        if (args[2]) append_hist(args[2]);
+        return 1;
+    }
+
     int start = 0;
     if (args[1] != NULL) {
         int cap = atoi(args[1]);

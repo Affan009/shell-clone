@@ -1,8 +1,9 @@
 #include "shell.h"
 #include "parser.h"
 
+// deprecated
 char* read_line() {
-    int buffsize = RL_BUFF_SIZE, position = 0;
+    int buffsize = LINE_BUFF_SIZE, position = 0;
     char* buffer = malloc(buffsize * sizeof(char));
     if (buffer == NULL) {
         fprintf(stderr, "ash: Allocation error\n");
@@ -21,7 +22,7 @@ char* read_line() {
         }
 
         if (position >= buffsize) {
-            buffsize += RL_BUFF_SIZE;
+            buffsize += LINE_BUFF_SIZE;
             char* temp = realloc(buffer, buffsize * sizeof(char));
             if (temp == NULL) {
                 free(buffer);

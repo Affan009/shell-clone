@@ -1,4 +1,5 @@
 ash
+.ash_history
 *.o
 *.out
 *.exe
