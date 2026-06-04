@@ -21,7 +21,7 @@ int sh_launch(char** args) {
         int status;
         do {
             wpid = waitpid(pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+        } while (wpid != -1 && !WIFEXITED(status) && !WIFSIGNALED(status));
     }
 
     return 1;
