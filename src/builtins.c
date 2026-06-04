@@ -7,7 +7,8 @@ const Builtin builtins[] = {
     {"type", sh_type},
     {"pwd", sh_pwd},
     {"cd", sh_cd},
-    {"help", sh_help}
+    {"help", sh_help},
+    {"history", sh_history}
 };
 
 // Helper function to get the number of built-in commands
@@ -16,6 +17,7 @@ int num_builtins() {
 }
 
 int sh_exit(char** args) {
+    (void)args; // Unused parameter
     return 0;
 }
 
@@ -59,6 +61,7 @@ int sh_type(char** args) {
 }
 
 int sh_pwd(char** args) {
+    (void)args; // Unused parameter
     char* path = getcwd(NULL, 0);
 
     if (path == NULL) {
@@ -90,11 +93,41 @@ int sh_cd(char** args) {
 }
 
 int sh_help(char** args) {
+    (void)args; // Unused parameter
     printf("ash: a C-shell (nice)\n");
     printf("Built-in commands:\n");
 
     for (int i = 0; i < num_builtins(); i++) {
         printf("  %s\n", builtins[i].name);
+    }
+    return 1;
+}
+
+int sh_history(char** args) {
+    if (args[1] != NULL && strcmp(args[1], "-r") == 0) {
+        if (args[2]) read_hist(args[2]);
+        return 1;
+    }
+
+    if (args[1] != NULL && strcmp(args[1], "-w") == 0) {
+        if (args[2]) write_hist(args[2]);
+        return 1;
+    }
+
+    if (args[1] != NULL && strcmp(args[1], "-a") == 0) {
+        if (args[2]) append_hist(args[2]);
+        return 1;
+    }
+
+    int start = 0;
+    if (args[1] != NULL) {
+        int cap = atoi(args[1]);
+        start = get_hist_count() - cap;
+        if (start < 0) start = 0;
+    }
+
+    for (int i = start; i < get_hist_count(); i++) {
+        printf("%d: %s\n", i + 1, get_hist_entry(i));
     }
     return 1;
 }

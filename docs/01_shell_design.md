@@ -50,7 +50,7 @@ Parser handles taking input from the user, and splitting the input line into arg
 #### Constants
 | Constant | Value | Description |
 |----------|------------|--------------|
-|`RL_BUFF_SIZE`|`1024`|Initial buffer size for reading the line|
+|`LINE_BUFF_SIZE`|`1024`|Initial buffer size for reading the line|
 |`TOK_BUFF_SIZE`|`64`|Initial buffer size for the tokens|
 |`TOK_DELIM`|`" \t\r\n\a"`|String containing delimiters|
 

@@ -20,6 +20,7 @@
 #include "executor.h"
 #include "redirection.h"
 #include "completion.h"
+#include "history.h"
 
 void sh_loop();
 
