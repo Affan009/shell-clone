@@ -6,7 +6,8 @@ ash is a UNIX-like shell clone in C that reads, parses, and executes commands si
 - External program execution via PATH lookup
 - Quoting (Single and Double Quotes)
 - Output Redirection (Overwrite and Appending Behavior)
-- Tab autocompletion for commands (builtins and PATH executables) and filenames.
+- Tab autocompletion for commands (builtins and PATH executables) and filenames
+- Command history and persistence to files
 
 ## Requirements
 - Linux or macOS
@@ -23,7 +24,6 @@ make
 
 ## Future Improvements
 - Piping
-- Command History
 - Background Jobs
 
 ## References

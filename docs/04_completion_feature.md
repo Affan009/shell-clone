@@ -2,7 +2,7 @@
 Shell automatically suggests possible matches and completes partial input commands and filenames.
 
 ### Important Note
-- This implementation involves using the **readline** function and handing it custom completion logic. Future work can involve implementing **readline** from scratch.
+- This implementation involves using the GNU Readline library and handing it custom completion logic.
 
 ### Goals
 - Implement command (builtin or PATH executable).

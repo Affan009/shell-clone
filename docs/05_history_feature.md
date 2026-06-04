@@ -49,4 +49,5 @@ The commands executed in the shell are stored in an in-memory history and persis
 |`read_hist(path)`|`const char*` — path to the file being read in|None (Void)|Reads command history from the given file (if it exists, else returns) path and loads it into the in-memory history|
 |`write_hist(path)`|`const char*` — path to the file being written to|None (Void)|Writes the in-memory command history to the given file. If the file exists, it overwrites it, else it creates a new one|
 |`append_hist(path)`|`const char*` — path to the file being appended to|None (Void)|Appends the in-memory command history to the end of the given file. If the file doesn't exist, it creates it|
+|`sh_history(args)`|`char**` — arguments to the builtin|`int` — status code|Prints the in-memory history to the terminal. A numeric argument (`n`) limits the number of entries being shown, while the `-r`, `-w`, and `-a` flags persist history to files|
 
