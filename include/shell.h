@@ -14,6 +14,7 @@
 #include <dirent.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <ctype.h>
 
 #include "parser.h"
 #include "builtins.h"
@@ -21,6 +22,7 @@
 #include "redirection.h"
 #include "completion.h"
 #include "history.h"
+#include "pipe.h"
 
 void sh_loop();
 
