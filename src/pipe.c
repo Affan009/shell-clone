@@ -69,10 +69,24 @@ int pipe_execute(char** segments) {
             // parse and handle redirection within this segment
             char** args = split_line(segments[i]);
             int redirected_fd = -1;
-            handle_redirection(args, &redirected_fd);
+            int saved_fd = handle_redirection(args, &redirected_fd);
+            if (redirected_fd != -1 && saved_fd == -1) {
+                perror("ash");
+                exit(EXIT_FAILURE);
+            }
 
             sh_execute(args);
+            // No need for saved_fd restoration in child
+
             exit(EXIT_FAILURE);
+        } else if (pid < 0) {
+            perror("ash");
+            if (fdin != STDIN_FILENO) close(fdin);
+            if (!is_last) {
+                close(fd[0]);
+                close(fd[1]);
+            }
+            break;
         }
 
         // parent closes used ends
