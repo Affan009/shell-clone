@@ -28,6 +28,7 @@ make
 - Jobs Control
 
 ## References
-- [Write a shell in C - Stephan Brennan](https://brennan.io/2015/01/16/write-a-shell-in-c/)
-- [Write a shell in C - danishpraka.sh](https://danishpraka.sh/posts/write-a-shell/)
+- [Write a Shell in C - Stephan Brennan](https://brennan.io/2015/01/16/write-a-shell-in-c/)
+- [Write a Shell in C - danishpraka.sh](https://danishpraka.sh/posts/write-a-shell/)
+- [Writing a UNIX Shell - Indradhanush Gupta](https://igupta.in/blog/writing-a-unix-shell-part-1/)
 - [CodeCrafters](https://app.codecrafters.io/catalog)
