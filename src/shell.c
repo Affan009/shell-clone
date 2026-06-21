@@ -7,9 +7,14 @@ void sh_loop() {
 
     init_completion();
     init_history();
+    init_handlers();
 
     do {
+        if (sigsetjmp(env, 1) == 42) continue;
+
+        jump_active = 1;
         line = readline("$ ");
+        jump_active = 0;
         if (!line) break;
         char* line_copy = strdup(line);
 

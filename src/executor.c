@@ -6,6 +6,7 @@ int sh_launch(char** args) {
 
     pid = fork();
     if (pid == 0) { // Child process
+        reset_handlers(); // Reset signal handlers to default in child process
         if (execvp(args[0], args) == -1) {
             if (errno == ENOENT) { // No such file or directory
                 fprintf(stderr, "ash: command not found: %s\n", args[0]);
@@ -21,7 +22,7 @@ int sh_launch(char** args) {
         int status;
         do {
             wpid = waitpid(pid, &status, WUNTRACED);
-        } while (wpid != -1 && !WIFEXITED(status) && !WIFSIGNALED(status));
+        } while (wpid != -1 && !WIFEXITED(status) && !WIFSIGNALED(status) && !WIFSTOPPED(status));
     }
 
     return 1;
