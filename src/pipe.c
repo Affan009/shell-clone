@@ -53,6 +53,8 @@ int pipe_execute(char** segments) {
 
         pid_t pid = fork();
         if (pid == 0) {
+            reset_handlers(); // Reset signal handlers to default in child process
+
             // set stdin from previous pipe
             if (fdin != STDIN_FILENO) {
                 dup2(fdin, STDIN_FILENO);
