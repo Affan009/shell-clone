@@ -11,7 +11,7 @@ typedef struct Job {
     int id;
     pid_t pid;
     JobState state;
-    char* cmd[1024];
+    char cmd[1024];
 
     struct Job* next;
     struct Job* prev;
@@ -20,11 +20,16 @@ typedef struct Job {
 typedef struct JobList {
     Job* head;
     Job* tail;
-    Job* current;
-    Job* previous;
+    
     int job_count;
 } JobList;
 
-JobList job_list = { NULL, NULL, NULL, NULL, 0 };
+Job* add_job(pid_t pid, char** args);
+
+Job* get_job_list_head();
+Job* get_job_list_current();
+Job* get_job_list_previous();
+
+bool is_background(char** args);
 
 #endif

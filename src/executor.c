@@ -2,6 +2,7 @@
 #include "executor.h"
 
 int sh_launch(char** args) {
+    bool background = is_background(args);
     pid_t pid;
 
     pid = fork();
@@ -18,11 +19,16 @@ int sh_launch(char** args) {
     } else if (pid < 0) { // Error forking
         perror("ash");
     } else { // Parent process
-        pid_t wpid;
-        int status;
-        do {
-            wpid = waitpid(pid, &status, WUNTRACED);
-        } while (wpid != -1 && !WIFEXITED(status) && !WIFSIGNALED(status) && !WIFSTOPPED(status));
+        if (background) {
+            Job* job = add_job(pid, args);
+            printf("[%d] %d\n", job->id, pid);
+        } else {
+            pid_t wpid;
+            int status;
+            do {
+                wpid = waitpid(pid, &status, WUNTRACED);
+            } while (wpid != -1 && !WIFEXITED(status) && !WIFSIGNALED(status) && !WIFSTOPPED(status));
+        }
     }
 
     return 1;

@@ -8,7 +8,8 @@ const Builtin builtins[] = {
     {"pwd", sh_pwd},
     {"cd", sh_cd},
     {"help", sh_help},
-    {"history", sh_history}
+    {"history", sh_history},
+    {"jobs", sh_jobs}
 };
 
 // Helper function to get the number of built-in commands
@@ -129,6 +130,19 @@ int sh_history(char** args) {
     for (int i = start; i < get_hist_count(); i++) {
         printf("%d: %s\n", i + 1, get_hist_entry(i));
     }
+    return 1;
+}
+
+int sh_jobs(char** args) {
+    (void)args;
+
+    for (Job* job = get_job_list_head(); job; job = job->next) {
+        char marker = (job == get_job_list_current()) ? '+' : (job == get_job_list_previous()) ? '-' : ' ';
+        char* state_str = (job->state == RUNNING) ? "Running" : (job->state == STOPPED) ? "Stopped" : "Done";
+        char* suffix = (job->state == RUNNING) ? " &" : "";
+        printf("[%d]%c  %-22s%s%s\n", job->id, marker, state_str, job->cmd, suffix);
+    }
+
     return 1;
 }
 
