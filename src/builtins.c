@@ -136,11 +136,28 @@ int sh_history(char** args) {
 int sh_jobs(char** args) {
     (void)args;
 
+    // first check for newly finished processes
+    int status;
+    pid_t pid;
+    while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
+        Job* job = find_job_by_pid(pid);
+        if (job) job->state = DONE;
+    }
+
     for (Job* job = get_job_list_head(); job; job = job->next) {
         char marker = (job == get_job_list_current()) ? '+' : (job == get_job_list_previous()) ? '-' : ' ';
         char* state_str = (job->state == RUNNING) ? "Running" : (job->state == STOPPED) ? "Stopped" : "Done";
         char* suffix = (job->state == RUNNING) ? " &" : "";
         printf("[%d]%c  %-22s%s%s\n", job->id, marker, state_str, job->cmd, suffix);
+    }
+
+    // remove Done jobs after printing
+    Job* curr = get_job_list_head();
+    while (curr != NULL) {
+        Job* next = curr->next;
+        if (curr->state == DONE)
+            remove_job(curr);
+        curr = next;
     }
 
     return 1;

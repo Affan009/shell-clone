@@ -48,6 +48,41 @@ Job* add_job(pid_t pid, char** args) {
     return job;
 }
 
+void remove_job(Job* job) {
+    if (!job) return;
+
+    // stitch list
+    if (job->prev) job->prev->next = job->next;
+    else job_list.head = job->next;  // was head
+
+    if (job->next) job->next->prev = job->prev;
+    else job_list.tail = job->prev;  // was tail
+
+    job_list.job_count--;
+
+    free(job);
+}
+
+void reap_jobs() {
+    int status;
+    pid_t pid;
+    while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
+        Job* job = find_job_by_pid(pid);
+        if (job) job->state = DONE;
+    }
+
+    Job* job = job_list.head;
+    while (job != NULL) {
+        Job* next = job->next;
+        if (job->state == DONE) {
+            char marker = (job == get_job_list_current()) ? '+' : ' ';
+            printf("[%d]%c  Done                    %s\n", job->id, marker, job->cmd);
+            remove_job(job);
+        }
+        job = next;
+    }
+}
+
 Job* get_job_list_head() {
     return job_list.head;
 }
@@ -58,6 +93,13 @@ Job* get_job_list_current() {
 
 Job* get_job_list_previous() {
     return (job_list.tail == NULL) ? NULL : job_list.tail->prev;
+}
+
+Job* find_job_by_pid(pid_t pid) {
+    for (Job* curr = job_list.head; curr; curr = curr->next) {
+        if (curr->pid == pid) return curr;
+    }
+    return NULL;
 }
 
 bool is_background(char** args) {

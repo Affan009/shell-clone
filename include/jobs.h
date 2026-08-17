@@ -25,11 +25,13 @@ typedef struct JobList {
 } JobList;
 
 Job* add_job(pid_t pid, char** args);
+void reap_jobs();
 
 Job* get_job_list_head();
 Job* get_job_list_current();
 Job* get_job_list_previous();
 
+Job* find_job_by_pid(pid_t pid);
 bool is_background(char** args);
 
 #endif
