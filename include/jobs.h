@@ -25,7 +25,7 @@ typedef struct JobList {
 } JobList;
 
 Job* add_job(pid_t pid, char** args);
-void reap_jobs();
+void reap_jobs(); // Not in use currently
 
 Job* get_job_list_head();
 Job* get_job_list_current();

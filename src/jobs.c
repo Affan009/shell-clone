@@ -63,6 +63,7 @@ void remove_job(Job* job) {
     free(job);
 }
 
+// Not in use currently 
 void reap_jobs() {
     int status;
     pid_t pid;

@@ -54,9 +54,11 @@ Shell runs a terminal command in the foreground. A background job is a command t
 |----------|------------|--------------|-------------|
 |`new_job(pid, args)`|`pid_t` — pid of the child process and `char**` — arguments provided to the launch function|`Job*` - Job pointer|Return a newly created job, populated with `id` (recycled), provided `pid`, `RUNNING` state, and the command string from `args`|
 |`add_job(pid, args)`|`pid_t` — pid of the child process and `char**` — arguments provided to the launch function|`Job*` — Job pointer|Return a job added to the `job_list` and created by `new_job(pid, args)`|
+|`remove_job(pid)`|`pid_t` — pid of the child process|None (Void)|Removes the job with the given pid from the `job_list`|
+|`reap_jobs()`|None (Void)|None (Void)|Reaps `DONE` jobs and removes them from the `job_list`|
+|`find_job_by_pid(pid)`|`pid_t` — pid of the child process|`Job*` — Job pointer|Return a job from the `job_list` with the given pid|
 |`get_job_list_head()`|None (Void)|`Job*` — Job pointer|Return the head of the `job_list`|
 |`get_job_list_current()`|None (Void)|`Job*` — Job pointer|Return the pointer to the current job node in the `job_list` (which is the `tail`)|
 |`get_job_list_previous()`|None (Void)|`Job*` — Job pointer|Return the pointer to the previous job of the current job node in the `job_list` (which is `tail->prev`)|
 |`get_next_id()`|None (Void)|`int` — Integer id|Return the integer id next to the highest job id in the `job_list`|
 |`is_background(args)`|`char**` — arguments|`bool` — a boolean|Return `true` if the command is supposed to run in the background|
-
