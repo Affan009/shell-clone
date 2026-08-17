@@ -28,6 +28,7 @@
 #include "history.h"
 #include "pipe.h"
 #include "sighandler.h"
+#include "jobs.h"
 
 void sh_loop();
 

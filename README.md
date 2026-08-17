@@ -10,6 +10,7 @@ ash is a UNIX-like shell clone in C that reads, parses, and executes commands si
 - Command history and persistence to files
 - Pipelines for chaining multiple commands
 - Signal Handling
+- Background Jobs
 
 ## Requirements
 - Linux or macOS
@@ -25,7 +26,9 @@ make
 ```
 
 ## Future Improvements
-- Jobs Control
+- Parameter Expansion
+- Programmable Completion
+- Input Redirection
 
 ## References
 - [Write a Shell in C - Stephan Brennan](https://brennan.io/2015/01/16/write-a-shell-in-c/)

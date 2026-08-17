@@ -17,6 +17,8 @@ int sh_pwd(char** args);
 int sh_cd(char** args);
 int sh_help(char** args);
 int sh_history(char** args);
+int sh_jobs(char** args);
+
 bool is_builtin(const char* command);
 
 extern const Builtin builtins[];
