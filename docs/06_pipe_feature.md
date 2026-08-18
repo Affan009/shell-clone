@@ -34,7 +34,8 @@ Note: Individual command segments in the pipeline can have their own redirection
 | Function | Parameters | Return Value | Description |
 |----------|------------|--------------|-------------|
 |`trim(str)`|`char*` — raw string|`char*` — whitespace trimmed output|Removes leading and trailing whitespaces from an input string|
-|`split_pipe(line)`|`char*` — string line|`char**` — array of string segments|Splits the line read at the prompt at pipes `"\|"` into a null terminated array of segment strings|
+|`has_pipe(line)`|`char*` — string line|`bool` — a boolean value|Check the line read at the prompt for pipes `"\|"`|
+|`split_pipe(line)`|`char*` — string line|`char**` — array of string segments|Splits the line read at the prompt at pipes `"\|"` into a null terminated array of segment strings (fixed, accounts for quoting behavior as well now)|
 |`pipe_execute(segments)`|`char**` — null terminated array of segments|`int` — an integer status|Executes the command pipeline with input/output redirection|
 
 ***
