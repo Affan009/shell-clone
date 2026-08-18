@@ -18,7 +18,7 @@ void sh_loop() {
         if (!line) break;
         char* line_copy = strdup(line);
 
-        if (strchr(line, '|') != NULL) {
+        if (has_pipe(line)) {
             char** segments = split_pipe(line);
             if (segments[0] == NULL) { // Empty command
                 free(line);

@@ -1,6 +1,29 @@
 #include "shell.h"
 #include "pipe.h"
 
+bool has_pipe(char* str) {
+    char* seg_ptr = str;
+    ParserState state = STATE_PARSER_NORMAL;
+    while (*seg_ptr != '\0') {
+        if (state == STATE_PARSER_NORMAL) {
+            if (*seg_ptr == '\'') {
+                state = STATE_IN_SINGLE_QUOTE;
+            } else if (*seg_ptr == '"') {
+                state = STATE_IN_DOUBLE_QUOTE;
+            } else if (*seg_ptr == '\\') {
+                seg_ptr++;
+                if (*seg_ptr == '\0') break;
+            } else if (*seg_ptr == PIPE) return true;
+        } else if (state == STATE_IN_SINGLE_QUOTE) {
+            if (*seg_ptr == '\'') state = STATE_PARSER_NORMAL;
+        } else if (state == STATE_IN_DOUBLE_QUOTE) {
+            if (*seg_ptr == '"') state = STATE_PARSER_NORMAL;
+        }
+        seg_ptr++;
+    }
+    return false;
+}
+
 char* trim(char* str) {
     char* end;
     while (isspace((unsigned char) *str)) str++;
@@ -21,20 +44,47 @@ char** split_pipe(char* line) {
         exit(EXIT_FAILURE);
     }
 
-    char* segment = strtok(line, PIPE);
-    while (segment != NULL) {
-        segments[position++] = trim(segment);
-        if (position >= buffsize) {
-            buffsize += SEG_BUFF_SIZE;
-            char** temp = realloc(segments, buffsize * sizeof(char*));
-            if (temp == NULL) {
-                free(segments);
-                fprintf(stderr, "ash: allocation error\n");
-                exit(EXIT_FAILURE);
+    char* seg_ptr = line;
+    bool in_seg = false; // Track if we're currently in a pipe segment
+    ParserState state = STATE_PARSER_NORMAL;
+    while (*seg_ptr != '\0') {
+        if (state == STATE_PARSER_NORMAL) {
+            if (*seg_ptr == '\'') {
+                state = STATE_IN_SINGLE_QUOTE;
+            } else if (*seg_ptr == '"') {
+                state = STATE_IN_DOUBLE_QUOTE;
+            } else if (*seg_ptr == '\\') {
+                seg_ptr++;
+                if (*seg_ptr == '\0') break;
+            } else if (*seg_ptr == PIPE) {
+                if (in_seg) {
+                    *seg_ptr = '\0';
+                    in_seg = false;
+                }
+            } else {
+                if (!in_seg) {
+                    segments[position++] = seg_ptr;
+
+                    if (position >= buffsize) {
+                        buffsize += SEG_BUFF_SIZE;
+                        char** temp = realloc(segments, buffsize * sizeof(char*));
+                        if (temp == NULL) {
+                            free(segments);
+                            fprintf(stderr, "ash: Allocation error\n");
+                            exit(EXIT_FAILURE);
+                        }
+                        segments = temp;
+                    }
+
+                    in_seg = true;
+                }
             }
-            segments = temp;
+        } else if (state == STATE_IN_SINGLE_QUOTE) {
+            if (*seg_ptr == '\'') state = STATE_PARSER_NORMAL;
+        } else if (state == STATE_IN_DOUBLE_QUOTE) {
+            if (*seg_ptr == '"') state = STATE_PARSER_NORMAL;
         }
-        segment = strtok(NULL, PIPE);
+        seg_ptr++;
     }
 
     segments[position] = NULL;
@@ -49,7 +99,14 @@ int pipe_execute(char** segments) {
         int fd[2];
         bool is_last = (segments[i + 1] == NULL);
 
-        if (!is_last) pipe(fd);
+        if (!is_last) {
+            if (pipe(fd) == -1) {
+                perror("ash");
+                if (fdin != STDIN_FILENO)
+                    close(fdin);
+                return 1;
+            }
+        }
 
         pid_t pid = fork();
         if (pid == 0) {
@@ -57,19 +114,25 @@ int pipe_execute(char** segments) {
 
             // set stdin from previous pipe
             if (fdin != STDIN_FILENO) {
-                dup2(fdin, STDIN_FILENO);
+                if (dup2(fdin, STDIN_FILENO) == -1) {
+                    perror("ash");
+                    exit(EXIT_FAILURE);
+                }
                 close(fdin);
             }
 
             // set stdout to next pipe
             if (!is_last) {
-                dup2(fd[1], STDOUT_FILENO);
+                if (dup2(fd[1], STDOUT_FILENO) == -1) {
+                    perror("ash");
+                    exit(EXIT_FAILURE);
+                }
                 close(fd[0]);
                 close(fd[1]);
             }
 
             // parse and handle redirection within this segment
-            char** args = split_line(segments[i]);
+            char** args = split_line(trim(segments[i]));
             int redirected_fd = -1;
             int saved_fd = handle_redirection(args, &redirected_fd);
             if (redirected_fd != -1 && saved_fd == -1) {
@@ -80,6 +143,7 @@ int pipe_execute(char** segments) {
             sh_execute(args);
             // No need for saved_fd restoration in child
 
+            free(args);
             exit(EXIT_FAILURE);
         } else if (pid < 0) {
             perror("ash");
